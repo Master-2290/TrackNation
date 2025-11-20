@@ -12,4 +12,5 @@ urlpatterns = [
     path('police-stations/', views.police_station_list,
          name='police_station_list'),
     path('hospitals/', views.hospital_list, name='hospital_list'),
+    path('accueil/', views.accueil, name='accueil'),
 ]

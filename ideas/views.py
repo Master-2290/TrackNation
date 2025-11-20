@@ -14,7 +14,8 @@ from accounts.decorators import official_required
 from django.db.utils import IntegrityError
 # Create your views here.
 
-
+def accueil(request):
+    return render(request, 'ideas/accueil.html')
 @login_required
 def idea_list(request):
     """
