@@ -1,0 +1,56 @@
+# Byte-compiled / optimised / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+wheels/
+
+# Installer / dépendances
+.Python
+
+# Tests / couverture
+.coverage
+*.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# Fichiers de configuration locale
+.env
+local_settings.py
+
+# Base de données locale (si SQLite)
+*.sqlite3
+
+# Fichiers statiques / media (ajuste selon ton projet)
+static/
+media/
+
+# Fichiers IDE / éditeur
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Système / OS
+.DS_Store
+Thumbs.db
+ehthumbs*.db
+$RECYCLE.BIN/
+
+# Logs
+*.log
+
+# Django migrations — **ne pas ignorer** si tu veux versionner les migrations
+# (c'est généralement recommandé) :contentReference[oaicite:0]{index=0}
