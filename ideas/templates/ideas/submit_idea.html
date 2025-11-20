@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Proposer une Idée{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto py-10 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">
+        Soumettre une Nouvelle Idée 💡
+    </h1>
+    <p class="text-center text-gray-600 mb-8">
+        Partagez votre proposition pour améliorer votre circonscription de {{ request.user.district.name }}.
+    </p>
+
+    <div class="bg-white shadow-xl rounded-lg p-8 border border-gray-200">
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="mb-4">
+                <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700">Titre</label>
+                {{ form.title }}
+                <p class="text-sm text-red-600 mt-1">{{ form.title.errors }}</p>
+            </div>
+
+            <div class="mb-6">
+                <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">Description Détaillée</label>
+                {{ form.description }}
+                <p class="text-sm text-red-600 mt-1">{{ form.description.errors }}</p>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-200">
+                Soumettre l'Idée
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

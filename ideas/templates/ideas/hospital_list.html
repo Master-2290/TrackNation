@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Hôpitaux de ma Zone{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-10 sm:px-6 lg:px-8">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">
+            🏥 Hôpitaux de Référence dans {{ user_district_name }}
+        </h1>
+        
+        <p class="text-gray-600 mb-6 border-b pb-3">
+            Liste des hôpitaux de référence pour votre circonscription.
+        </p>
+
+        {% if hospitals %}
+        <div class="overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Hôpital
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Commune
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Quartier
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            📞 Numéro Urgence
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for hospital in hospitals %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ hospital.name }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {{ hospital.commune }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {{ hospital.quartier }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-600">
+                            <a href="tel:{{ hospital.emergency_number|cut:" " }}">{{ hospital.emergency_number }}</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p class="text-center py-10 text-gray-500">
+                Aucun hôpital de référence n'est enregistré pour votre circonscription ({{ user_district_name }}).
+            </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

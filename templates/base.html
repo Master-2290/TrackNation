@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Plateforme Citoyenne{% endblock %}</title>
+    
+    <script src="https://unpkg.com/htmx.org@1.9.10" defer></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        .citizen-bg { background-color: #3b82f6; } /* Bleu */
+        .official-bg { background-color: #f59e0b; } /* Orange */
+        .admin-bg { background-color: #ef4444; } /* Rouge */
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <header class="shadow-md {% if request.user.is_authenticated and request.user.is_official %} official-bg {% elif request.user.is_authenticated and request.user.is_admin %} admin-bg {% else %} citizen-bg {% endif %} text-white">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+            <a href="{% url 'idea_list' %}" class="text-xl font-bold">
+                TrackNation 💡
+            </a>
+            
+            <div class="flex space-x-4 items-center">
+                {% if request.user.is_authenticated %}
+                    {% if request.user.role == 'citizen' %}
+                        <a href="{% url 'idea_list' %}" class="hover:text-gray-200">Idées Locales</a>
+                        <a href="{% url 'submit_idea' %}" class="hover:text-gray-200">Proposer</a>
+                        <a href="{% url 'police_station_list' %}" class="hover:text-gray-200">Postes de Police</a>
+                        <a href="{% url 'hospital_list' %}" class="hover:text-gray-200">Hôpitaux</a>
+                    {% elif request.user.role == 'official' %}
+                        <a href="{% url 'official_dashboard' %}" class="font-bold border-b-2 border-white">Tableau de bord Élu</a>
+                        <a href="{% url 'project_list' %}" class="hover:text-gray-200">Projets en cours</a>
+                    {% elif request.user.role == 'admin' %}
+                        <a href="/admin/" class="hover:text-gray-200">Admin Panel</a>
+                    {% endif %}
+                    
+                    <span class="text-sm border rounded-full px-2 py-0.5 ml-4">
+                        {{ request.user.get_role_display }}
+                    </span>
+                    <a href="{% url 'logout' %}" class="bg-white text-gray-800 px-3 py-1 rounded-md text-sm font-medium hover:bg-gray-200">Déconnexion</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="hover:text-gray-200">Se connecter</a>
+                    <a href="{% url 'signup' %}" class="bg-white text-gray-800 px-3 py-1 rounded-md text-sm font-medium hover:bg-gray-200">Inscription</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Élu{% endblock %}
+
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-xl border-t-4 border-orange-500">
+    <h1 class="text-3xl font-extrabold text-gray-900 mb-6 flex items-center">
+        <svg class="w-8 h-8 mr-3 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path>
+        </svg>
+        Tableau de Bord Élu
+    </h1>
+    
+    <div class="mb-8 p-4 bg-yellow-50 rounded-lg text-yellow-800 border-l-4 border-yellow-500">
+        Vous gérez les circonscriptions : 
+        <span class="font-semibold">
+            {% if request.user.districts.all %}
+                {% for district in request.user.districts.all %}
+                    {{ district.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            {% else %}
+                (Aucune zone assignée)
+            {% endif %}
+        </span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-blue-50 p-5 rounded-lg border border-blue-200">
+            <p class="text-lg font-medium text-gray-600">Idées en Attente</p>
+            <p class="text-3xl font-bold text-blue-700 mt-1">{{ pending_ideas_count }}</p>
+        </div>
+        <div class="bg-green-50 p-5 rounded-lg border border-green-200">
+            <p class="text-lg font-medium text-gray-600">Projets en Cours</p>
+            <p class="text-3xl font-bold text-green-700 mt-1">{{ ongoing_projects_count }}</p>
+        </div>
+        <div class="bg-orange-50 p-5 rounded-lg border border-orange-200">
+            <p class="text-lg font-medium text-gray-600">Participation (total votes)</p>
+            <p class="text-3xl font-bold text-orange-700 mt-1">{{ total_votes_count }}</p>
+        </div>
+    </div>
+
+    <h2 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">
+        À Analyser (Idées en Attente de {{ request.user.district.name|default:"vos zones" }})
+    </h2>
+
+    <div class="space-y-4">
+        {% for idea in pending_ideas %}
+            <div class="p-4 border border-gray-300 rounded-lg flex justify-between items-center bg-gray-50">
+                <div class="flex-1">
+                    <h3 class="font-semibold text-lg text-gray-900">{{ idea.title }}</h3>
+                    <p class="text-sm text-gray-600">Circonscription : {{ idea.district.name }} | {{ idea.votes.count }} Soutiens</p>
+                </div>
+                
+                <div class="ml-4">
+                    <label for="status-{{ idea.id }}" class="sr-only">Changer le statut</label>
+                    <select
+                        id="status-{{ idea.id }}"
+                        name="status"
+                        hx-post="{% url 'update_idea_status' idea.id %}"
+                        hx-target="#idea-status-display-{{ idea.id }}"
+                        hx-swap="outerHTML"
+                        hx-confirm="Êtes-vous sûr de vouloir changer le statut de cette idée ?"
+                        class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                    >
+                        <option value="review" {% if idea.status == 'review' %}selected{% endif %}>Passer en Analyse</option>
+                        <option value="approved">Approuver</option>
+                        <option value="rejected">Rejeter</option>
+                    </select>
+
+                    {% if idea.status == 'approved' %}
+                    <a href="{% url 'convert_to_project' idea.id %}" 
+                       onclick="return confirm('Confirmer la conversion de cette idée en Projet ?');"
+                       class="ml-4 px-3 py-1 text-sm font-bold bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-150">
+                        Créer Projet
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <span id="idea-status-display-{{ idea.id }}" class="ml-4 px-3 py-1 text-sm font-bold bg-yellow-100 text-yellow-800 rounded-full">
+                    {{ idea.get_status_display }}
+                </span>
+            </div>
+        {% empty %}
+            <p class="text-center py-6 text-gray-500">
+                Félicitations ! Aucune idée en attente de décision dans vos circonscriptions.
+            </p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

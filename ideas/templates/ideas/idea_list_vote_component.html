@@ -1,0 +1,26 @@
+{# L'ID du bloc à remplacer est défini ici #}
+<div id="vote-block-{{ idea.id }}" class="flex items-center space-x-3">
+    {% load static %}
+    
+    <button 
+        hx-post="{% url 'vote_idea' idea.id %}" 
+        {# La cible pointe vers l'ID du div parent #}
+        hx-target="#vote-block-{{ idea.id }}"  
+        hx-swap="outerHTML" 
+        class="flex items-center space-x-2 px-3 py-1.5 rounded-full transition duration-150
+            {% if has_voted %} bg-blue-600 text-white hover:bg-blue-700
+            {% else %} bg-gray-200 text-gray-700 hover:bg-gray-300
+            {% endif %}"
+        {% if request.user.role != 'citizen' %} disabled {% endif %}
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current" viewBox="0 0 24 24" width="20" height="20">
+            <path d="M7 11v10h2v-10h-2zm4-7v17h2v-17h-2zm4 11v6h2v-6h-2z"/>
+        </svg>
+        {% if has_voted %} Soutenu {% else %} Soutenir {% endif %}
+    </button>
+    
+    <div class="text-gray-600">
+        <span class="font-bold text-lg text-blue-600">{{ idea.votes.count }}</span> votes
+    </div>
+
+</div>

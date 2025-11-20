@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Postes de Police de ma Zone{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-10 sm:px-6 lg:px-8">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">
+            👮 Postes de Police dans {{ user_district_name }}
+        </h1>
+        
+        <p class="text-gray-600 mb-6 border-b pb-3">
+            Informations de sécurité pour votre zone de résidence.
+        </p>
+
+        {% if stations %}
+        <div class="overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Poste de Police
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Commune
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Quartier
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            📞 Numéro Urgence
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for station in stations %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ station.name }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {{ station.commune }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {{ station.quartier }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-600">
+                            <a href="tel:{{ station.emergency_number|cut:" " }}">{{ station.emergency_number }}</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <p class="text-center py-10 text-gray-500">
+                Aucun poste de police n'est enregistré pour votre circonscription ({{ user_district_name }}).
+            </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
